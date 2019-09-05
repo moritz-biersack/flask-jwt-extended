@@ -280,7 +280,7 @@ def set_access_cookies(response, encoded_access_token, max_age=None):
                             samesite=config.cookie_samesite)
 
 
-def set_refresh_cookies(response, encoded_refresh_token, max_age=None):
+def set_refresh_cookies(response, encoded_refresh_token, max_age=None, csrf_token=None):
     """
     Takes a flask response object, and an encoded refresh token, and configures
     the response to set in the refresh token in a cookie. If `JWT_CSRF_IN_COOKIES`
@@ -312,7 +312,7 @@ def set_refresh_cookies(response, encoded_refresh_token, max_age=None):
     # If enabled, set the csrf double submit refresh cookie
     if config.csrf_protect and config.csrf_in_cookies:
         response.set_cookie(config.refresh_csrf_cookie_name,
-                            value=get_csrf_token(encoded_refresh_token),
+                            value=csrf_token or get_csrf_token(encoded_refresh_token),
                             max_age=max_age or config.cookie_max_age,
                             secure=config.cookie_secure,
                             httponly=False,
